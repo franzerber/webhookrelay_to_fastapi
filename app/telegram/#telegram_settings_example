@@ -1,0 +1,4 @@
+{
+    "channel1": {"chat_id": "123456789", "bot_token": "abcs1"},
+    "channel2": {"chat_id": "a123456789", "bot_token": "abcs2"}
+}

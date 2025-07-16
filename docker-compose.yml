@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+  webhookrelay_to_fastapi:
+    container_name: webhookrelay_to_fastapi
+    image: webhookrelay_to_fastapi:latest
+    restart: always
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./secrets/.telegram_settings:/app/telegram/.telegram_settings:ro
+    networks:
+      fastapi-net:
+        ipv4_address: 172.28.255.11
+  relay:
+    container_name: webhookrelay
+    image: webhookrelay/webhookrelayd:latest
+    #network_mode: host # required if you want to access other services running on localhost (otherwise localhost would be inside this container)
+    restart: always
+    environment:
+      # Authentication
+      - RELAY_KEY=${RELAY_KEY}
+      - RELAY_SECRET=${RELAY_SECRET}
+      # buckets list to subscribe
+      - BUCKETS=${BUCKETS}
+    networks:
+      fastapi-net:
+        ipv4_address: 172.28.255.12
+
+networks:
+  fastapi-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.255.0/24
